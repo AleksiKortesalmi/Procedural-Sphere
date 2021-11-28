@@ -1,0 +1,15 @@
+{
+    "name": "com.aleksikortesalmi.proceduralsphere",
+    "version": "0.0.1",
+    "displayName": "Procedural Sphere",
+    "author": {
+        "name": "Aleksi Kortesalmi",
+        "email": "arcticsoftdev@gmail.com",
+        "url": "https://www.youtube.com/watch?v=mgsLb3TKljk"
+    },
+    "licensesUrl": "https://github.com/AleksiKortesalmi/Procedural-Sphere/blob/main/License.txt",
+    "description": "Procedural Sphere with customizable layered noise calculated in Compute Shaders.",
+    "unity": "2019.3",
+    "unityRelease": "8f1",
+    "hideInEditor": false
+}

@@ -1,0 +1,27 @@
+﻿// Credit for the math goes to Jack Flick. Specific tutorial: https://catlikecoding.com/unity/tutorials/cube-sphere/
+
+#pragma kernel CSMain
+
+RWStructuredBuffer<float3> vertices;
+RWStructuredBuffer<float3> normals;
+
+int resolution;
+float radius;
+
+
+[numthreads(512,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	// Calculate more uniform vertex distribution
+	float3 v = vertices[id.x] * 2 / resolution - float3(1, 1, 1);
+	float x2 = v.x * v.x;
+	float y2 = v.y * v.y;
+	float z2 = v.z * v.z;
+	float3 s;
+	s.x = v.x * sqrt(1 - y2 / 2 - z2 / 2 + y2 * z2 / 3);
+	s.y = v.y * sqrt(1 - x2 / 2 - z2 / 2 + x2 * z2 / 3);
+	s.z = v.z * sqrt(1 - x2 / 2 - y2 / 2 + x2 * y2 / 3);
+
+	normals[id.x] = s;
+	vertices[id.x] = normals[id.x] * radius;
+}

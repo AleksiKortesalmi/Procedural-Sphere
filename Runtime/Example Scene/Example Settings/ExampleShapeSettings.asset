@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a31c4b672a5d01041a1239c88ee9b3b6, type: 3}
+  m_Name: ExampleShapeSettings
+  m_EditorClassIdentifier: 
+  radius: 1.3
+  offsetVelocity: 0
+  noiseLayers:
+  - enabled: 1
+    firstLayerAsMask: 0
+    noiseSettings:
+      filterType: 0
+      simpleNoiseSettings:
+        strength: -0.66
+        numLayers: 1
+        firstLayerRoughness: 0.74
+        roughness: 3.16
+        persistence: 0.35
+        minValue: 0.5
+        offset: {x: -0.14, y: 4.71, z: 73.75518}
+      rigidNoiseSettings:
+        weightMultiplier: 0.1
+  - enabled: 1
+    firstLayerAsMask: -1
+    noiseSettings:
+      filterType: 1
+      simpleNoiseSettings:
+        strength: 0.39
+        numLayers: 2
+        firstLayerRoughness: 0.8
+        roughness: 2
+        persistence: 1
+        minValue: 0.25
+        offset: {x: -0.14, y: 4.71, z: 73.75518}
+      rigidNoiseSettings:
+        weightMultiplier: 0.8
+  - enabled: 1
+    firstLayerAsMask: 1
+    noiseSettings:
+      filterType: 1
+      simpleNoiseSettings:
+        strength: 0.025
+        numLayers: 1
+        firstLayerRoughness: 10.03
+        roughness: 2
+        persistence: 1
+        minValue: 0
+        offset: {x: -0.14, y: 4.71, z: 73.75518}
+      rigidNoiseSettings:
+        weightMultiplier: 0.76
+  - enabled: 1
+    firstLayerAsMask: -1
+    noiseSettings:
+      filterType: 0
+      simpleNoiseSettings:
+        strength: 0.1
+        numLayers: 2
+        firstLayerRoughness: 1
+        roughness: 7.03
+        persistence: 0.16
+        minValue: 0
+        offset: {x: -0.14, y: 4.71, z: 73.75518}
+      rigidNoiseSettings:
+        weightMultiplier: 0.1
+  - enabled: 1
+    firstLayerAsMask: -1
+    noiseSettings:
+      filterType: 1
+      simpleNoiseSettings:
+        strength: 0.125
+        numLayers: 2
+        firstLayerRoughness: 1.44
+        roughness: 7.03
+        persistence: 1.03
+        minValue: 0.14
+        offset: {x: -0.14, y: 4.71, z: 73.75518}
+      rigidNoiseSettings:
+        weightMultiplier: 1.25

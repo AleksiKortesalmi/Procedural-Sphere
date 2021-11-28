@@ -1,0 +1,93 @@
+﻿// Credit for "Simple Noise Processing" and "Rigid Noise Processing" goes to Sebastian Lague. 
+// Learn more on his tutorial series about procedural planets: https://www.youtube.com/playlist?list=PLFt_AvWsXl0cONs3T0By4puYy6GM22ko8 
+
+#include "Packages/com.aleksikortesalmi.proceduralsphere/Runtime/Procedural Sphere/Shaders/SimplexNoise.compute"
+
+#pragma kernel CSMain
+
+RWStructuredBuffer<float3> vertices;
+RWBuffer<float> noiseValues;
+
+struct NoiseSettings
+{
+    float3 offset;
+    float frequency;
+    float firstLayerRoughness;
+    float roughness;
+    float persistence;
+    float strength;
+    float minValue;
+    float weightMultiplier;
+    int numLayers;
+    int firstLayerAsMask;
+};
+
+StructuredBuffer<NoiseSettings> noiseSettings;
+
+float radius;
+int numNoiseLayers;
+
+
+[numthreads(512,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float elevation = 0;
+    float firstLayerValue = 0;
+    float reverseFirstLayerValue = 0;
+
+    for (int n = 0; n < numNoiseLayers; n++)
+    {
+        float noiseValue = 0;
+        float frequency = noiseSettings[n].firstLayerRoughness;
+        float amplitude = 1;
+        float weight = 1;
+
+        if (noiseSettings[n].weightMultiplier == 0) 
+        {
+            // Simple Noise Processing
+            for (int i = 0; i < noiseSettings[n].numLayers; i++)
+            {
+                float v = snoise(vertices[id.x] * frequency + noiseSettings[n].offset);
+                noiseValue += (v + 1) * .5f * amplitude;
+                frequency *= noiseSettings[n].roughness;
+                amplitude *= noiseSettings[n].persistence;
+            }
+        }
+        else
+        {
+            // Rigid Noise Processing
+            for (int i = 0; i < noiseSettings[n].numLayers; i++)
+            {
+                float v = 1 - abs(snoise(vertices[id.x] * frequency + noiseSettings[n].offset));
+                v *= v;
+                v *= weight;
+                weight = clamp(v * noiseSettings[n].weightMultiplier, 0, 1);
+
+                noiseValue += v * amplitude;
+                frequency *= noiseSettings[n].roughness;
+                amplitude *= noiseSettings[n].persistence;
+            }
+        }
+
+        // First layer reverse mask
+        if (n == 0)
+            reverseFirstLayerValue = -min(0, noiseValue - noiseSettings[n].minValue);
+
+        // Min value
+        noiseValue = max(0, noiseValue - noiseSettings[n].minValue);
+
+        // First layer as mask
+        if (n == 0)
+            firstLayerValue = noiseValue;
+        else if (noiseSettings[n].firstLayerAsMask == 1)
+            noiseValue *= firstLayerValue * (2 - reverseFirstLayerValue);
+        else if (noiseSettings[n].firstLayerAsMask == -1)
+            noiseValue *= reverseFirstLayerValue * (2 + firstLayerValue);
+
+        elevation += noiseValue * noiseSettings[n].strength;
+    }
+
+    noiseValues[id.x] = radius * (1 + elevation);
+
+    vertices[id.x] = vertices[id.x] * noiseValues[id.x];
+}
